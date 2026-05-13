@@ -1,151 +1,107 @@
 # Linux-Controlled FPGA Acceleration Platform on Zybo Z7
 
-This project develops a Linux-controlled FPGA acceleration platform on the Digilent Zybo Z7-20 board using the Zynq-7020 SoC.
+This project builds a Linux-controlled FPGA acceleration platform on the Zybo Z7-20 board.
 
-The goal is to build a complete hardware/software path where embedded Linux running on the ARM Processing System controls custom FPGA logic in the Programmable Logic. The platform is first validated with a simple deterministic FPGA processing block, then extended later with an AES-CTR encryption accelerator.
+The system uses:
+- Linux running on the Zynq processing system,
+- custom FPGA logic in programmable logic,
+- a Linux kernel driver,
+- a user-space test application.
 
-## Target Hardware
+The current implementation proves the first controlled Linux-to-FPGA register path on real hardware.
 
-- Board: Digilent Zybo Z7-20
-- SoC: AMD/Xilinx Zynq-7020
-- Processor side: ARM Cortex-A9 Processing System
-- FPGA side: Programmable Logic
+## Current verified milestone
 
-## Development Setup
+The current board-verified implementation includes:
 
-The project uses:
-
-- Vivado 2025.2 on Windows for FPGA hardware design
-- PetaLinux 2025.2 on Ubuntu 22.04 VM for embedded Linux generation
-- VS Code Remote-SSH for Linux-side development
-- Git for version control
-
-## Project Idea
-
-The Zynq-7020 combines two main hardware parts in one chip:
-
-- PS: Processing System, where embedded Linux runs
-- PL: Programmable Logic, where the FPGA accelerator hardware is implemented
-
-Linux controls the FPGA hardware through a kernel driver. The driver communicates with hardware registers, manages DMA transfers, handles completion signaling, and exposes a controlled interface to user space.
-
-The project focuses on the complete Linux-to-FPGA communication platform, not only the accelerator logic itself.
-
-## Planned Architecture
-
-The platform uses:
-
-- AXI-Lite for control and status register access
-- AXI DMA for moving data buffers between DDR memory and FPGA logic
-- AXI-Stream for the FPGA accelerator data path
-- PL-to-PS interrupts for completion signaling
-- A Linux kernel driver for safe hardware access
-- A user-space C application for testing, verification, and benchmarking
-
-High-level flow:
+- a custom AXI-Lite FPGA register block,
+- a Linux kernel driver,
+- a user-space register test program,
+- a device node at:
 
 ```text
-Linux user application
-    ↓
-Linux kernel driver
-    ↓
-AXI-Lite control/status registers
-    ↓
-AXI DMA buffer transfer
-    ↓
-AXI-Stream FPGA processing block
-    ↓
-AXI DMA result back to DDR
-    ↓
-Linux verification and benchmarking
+/dev/zybo_accel0
 ```
 
-## Development Milestones
+The tested register block exposes:
 
-The project is organized into the following development milestones:
+- `VERSION` — fixed read-only hardware identification,
+- `SCRATCH` — read/write register for register-path validation.
 
-1. **Zynq Hardware Platform**
-   - Create the Zybo Z7-20 Vivado hardware project
-   - Configure the Zynq Processing System
-   - Enable DDR, UART, SD card, Ethernet, clocks, resets, AXI ports, and PL-to-PS interrupts
-
-2. **FPGA Communication Infrastructure**
-   - Add AXI-Lite control/status registers
-   - Add AXI DMA for DDR-to-FPGA buffer transfer
-   - Add AXI-Stream data path between DMA and FPGA logic
-   - Add completion signaling from PL to PS
-
-3. **Validation Accelerator**
-   - Implement a simple deterministic FPGA processing block
-   - Validate register access, DMA transfer, AXI-Stream behavior, interrupts, and output correctness
-
-4. **Embedded Linux Integration**
-   - Create the PetaLinux project from the exported hardware design
-   - Configure device tree, kernel options, and root filesystem
-   - Build and boot the Linux system on the Zybo Z7-20
-
-5. **Linux Driver and User-Space Software**
-   - Develop the Linux kernel driver for register, DMA, interrupt, and buffer management
-   - Expose a controlled device interface to user space
-   - Develop a user-space C application for configuration, verification, and benchmarking
-
-6. **AES-CTR Accelerator Extension**
-   - Replace or extend the validation block with AES-CTR hardware acceleration
-   - Add AES-specific configuration and verification
-   - Benchmark FPGA AES-CTR performance against software execution
-
-## Validation Stage
-
-The first FPGA processing block will be a simple deterministic accelerator, such as XOR with a constant value.
-
-This stage verifies that:
-
-- Linux can configure FPGA registers
-- DMA can move input data from DDR memory to the FPGA
-- FPGA logic can process the AXI-Stream data
-- DMA can return the output data to DDR memory
-- Linux can detect completion
-- Linux can verify the result
-- Benchmark data can be collected
-
-## AES-CTR Extension
-
-After the platform is verified, the simple validation block will be replaced or extended with an AES-CTR encryption accelerator.
-
-The same platform structure will be reused:
-
-- AXI-Lite control/status model
-- AXI DMA data transfer
-- AXI-Stream processing path
-- Linux kernel driver
-- User-space verification and benchmarking framework
-
-## Planned Repository Structure
+The user-space test program communicates through the driver and confirms:
 
 ```text
-docs/
-  architecture/
-  reports/
+Hardware VERSION  : 0x00010000
+SCRATCH check: PASS
+SCRATCH check: PASS
+Overall result    : PASS
+```
 
-hardware/
-  rtl/
-  ip/
-  vivado/
+## Target platform
 
+Hardware:
+- Zybo Z7-20
+- Zynq-7020
+
+Development tools:
+- Vivado 2025.2
+- PetaLinux 2025.2
+
+## Current system path
+
+```text
+User-space test application
+→ Linux kernel driver
+→ /dev/zybo_accel0
+→ AXI-Lite MMIO access
+→ custom FPGA register block
+→ VERSION and SCRATCH registers
+```
+
+## Planned direction
+
+The current register path is the first verified step.
+
+Planned later work includes:
+- a fuller accelerator control/status interface,
+- DMA-based buffer transfer,
+- an AXI-Stream processing path,
+- completion handling,
+- verification and benchmarking tools,
+- a later AES-CTR accelerator extension.
+
+These later features are not implemented in the current milestone.
+
+## Repository layout
+
+Current public source layout:
+
+```text
 linux/
   driver/
-  petalinux/
+    zybo_accel.c
+    zybo_accel_uapi.h
+    Makefile
 
 software/
   apps/
+    zybo_accel_reg_test.c
+    Makefile
 
-scripts/
-
-tests/
+docs/
+  architecture.md
 ```
 
-## Notes
+## Documentation
 
-This project is under active development.
+- [`BUILD.md`](BUILD.md)
+  Build and run procedure for the public repository.
 
-The main focus is hardware/software co-design on a Zynq SoC: embedded Linux, FPGA logic, AXI communication, DMA-based data movement, Linux kernel driver development, user-space verification, and accelerator benchmarking.
+- [`docs/architecture.md`](docs/architecture.md)
+  System architecture and current implementation boundary.
+
+## Status
+
+The first driver-controlled FPGA register test is working on the physical Zybo Z7-20 board.
+
+The project is now ready to grow from register-level control into a larger FPGA acceleration data path.

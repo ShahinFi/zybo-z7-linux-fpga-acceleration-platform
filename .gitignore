@@ -1,0 +1,83 @@
+# Private local documentation
+docs/private/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+
+# Temporary files and logs
+*.tmp
+*.bak
+*.orig
+*.rej
+*.log
+
+# C/C++ and kernel module build outputs
+*.o
+*.a
+*.so
+*.elf
+*.bin
+*.map
+*.ko
+*.mod
+*.mod.c
+*.mod.o
+*.cmd
+*.order
+*.symvers
+Module.symvers
+modules.order
+
+# Local application binaries
+software/apps/zybo_accel_reg_test
+software/apps/zybo-accel-reg-test
+
+# Vivado generated files
+.Xil/
+*.jou
+*.str
+*.wdb
+*.wcfg
+*.xpr
+*.runs/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.sim/
+*.gen/
+*.srcs/
+*.sdk/
+*.bit
+*.ltx
+*.dcp
+
+# PetaLinux and Yocto generated files
+build/
+images/
+components/
+pre-built/
+tmp/
+sstate-cache/
+downloads/
+BOOT.BIN
+image.ub
+boot.scr
+rootfs.ext4
+rootfs.tar.gz
+rootfs.cpio
+rootfs.cpio.gz
+system.bit
+system.dtb
+system.xsa
+u-boot.elf
+zImage
+
+# Script cache
+__pycache__/
+*.pyc
