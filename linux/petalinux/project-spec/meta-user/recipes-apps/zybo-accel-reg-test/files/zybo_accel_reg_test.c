@@ -3,7 +3,7 @@
 /*
  * Register-access validation tool for /dev/zybo_accel0.
  *
- * This program verifies the driver-controlled AXI-Lite register path:
+ * This program verifies the first proper driver milestone:
  *   1. Query driver/device information.
  *   2. Check the VERSION register value returned by the driver.
  *   3. Write two known patterns to SCRATCH.
@@ -24,7 +24,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#include "../../linux/driver/zybo_accel_uapi.h"
+#include "zybo_accel_uapi.h"
 
 #define EXPECTED_HW_VERSION            0x00010000U
 

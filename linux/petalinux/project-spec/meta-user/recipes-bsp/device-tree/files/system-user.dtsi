@@ -1,0 +1,8 @@
+/include/ "system-conf.dtsi"
+/ {
+};
+
+&zybo_accel_ctrl_0 {
+	dmas = <&axi_dma_0 0>, <&axi_dma_0 1>;
+	dma-names = "tx", "rx";
+};

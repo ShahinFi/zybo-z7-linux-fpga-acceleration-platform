@@ -10,6 +10,10 @@ Thumbs.db
 *.swp
 *.swo
 
+# Local editor / agent workspace state
+.codex
+.agents
+
 # Temporary files and logs
 *.tmp
 *.bak
@@ -36,7 +40,11 @@ modules.order
 
 # Local application binaries
 software/apps/zybo_accel_reg_test
+software/apps/zybo_accel_dma_test
+software/apps/zybo_accel_bench
 software/apps/zybo-accel-reg-test
+software/apps/zybo-accel-dma-test
+software/apps/zybo-accel-bench
 
 # Vivado generated files
 .Xil/

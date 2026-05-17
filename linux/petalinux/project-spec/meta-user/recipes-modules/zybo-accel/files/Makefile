@@ -1,7 +1,6 @@
 obj-m += zybo-accel.o
 zybo-accel-y := zybo_accel.o
 
-# PetaLinux supplies KERNEL_SRC; local builds fall back to the host kernel tree.
 MODULE_KERNEL_DIR := $(KERNEL_SRC)
 
 ifeq ($(strip $(MODULE_KERNEL_DIR)),)

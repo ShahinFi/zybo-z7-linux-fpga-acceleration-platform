@@ -107,7 +107,7 @@ struct zybo_accel_stats {
 /*
  * IOCTL numbering policy:
  * 0x00: Device and ABI discovery.
- * 0x10-0x1f: AXI-Lite register-control helpers.
+ * 0x10-0x1f: AXI-Lite register-control helpers from the first milestone.
  * 0x20-0x2f: DMA-backed transaction control and status.
  */
 #define ZYBO_ACCEL_IOCTL_GET_INFO \
