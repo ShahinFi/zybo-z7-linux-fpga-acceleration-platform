@@ -33,6 +33,25 @@ The DMA/XOR validation suite passed on real hardware with:
 
 The AXI-Lite register regression test also remains passing after DMA and XOR accelerator integration.
 
+## Benchmark result
+
+The benchmark measures one complete blocking Linux-controlled FPGA transaction. The measured path includes the user-space submit call, kernel-driver handling, DMA transfer through the FPGA XOR accelerator, DMA completion wait, and return to user space. It does not measure XOR as a standalone algorithm.
+
+Three complete benchmark sweeps were run on the physical Zybo Z7-20 board. All benchmark rows passed in all three sweeps with no failed timed submissions, no timeouts, and no driver-reported errors.
+
+Average result across the three benchmark sweeps:
+
+| Transfer size | Timed iterations | Average latency | Average throughput | Average CPU usage |
+|---:|---:|---:|---:|---:|
+| 64 B | 10000 | 55.250 us | 1.092 MiB/s | 70.19% |
+| 256 B | 10000 | 62.368 us | 3.809 MiB/s | 64.14% |
+| 1 KiB | 5000 | 64.473 us | 14.752 MiB/s | 66.85% |
+| 4 KiB | 5000 | 93.932 us | 40.822 MiB/s | 62.33% |
+| 16 KiB | 2000 | 216.028 us | 71.716 MiB/s | 55.03% |
+| 64 KiB | 1000 | 695.796 us | 89.577 MiB/s | 50.68% |
+| 256 KiB | 300 | 2818.902 us | 88.608 MiB/s | 52.76% |
+| 1 MiB | 100 | 11541.463 us | 86.614 MiB/s | 54.39% |
+
 ## How the system is divided
 
 ### Linux software
